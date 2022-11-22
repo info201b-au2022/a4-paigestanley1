@@ -1,0 +1,180 @@
+---
+title: "Incarceration Trends in the US"
+author: "Paige Stanley"
+date: '2022-11-21'
+output: html_document
+---
+```{r, echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+```{r, echo=FALSE}
+source("analysis.R")
+```
+
+## Abstract 
+This report studies US incarceration data from 1970 to 2018. The charts included reveal the Growth of the US Prison Population, the Growth of the US Prison Population by State, the Distribution of the US Prison Population by Ethnicity, and the Distribution of US Prison Population by State.  These charts show the inequalities in the US Prison System and makes inferences in why these are occurring.
+
+## Introduction 
+
+The United States has the largest prison population in the world, despite the fact that it only makes up a small portion of the world’s population. Starting around 1970, the United States government introduced the idea of being “tough on crime” in which many policies were introduced to put more people in prison in order to create a safer society. However, instead of lowering crime, this movement resulted in an extremely crowded prison system and a lot of inequality in who was being targeted. Some of these policies include the “Three Strikes Law”, the “War on Drugs”, and the increase use of life sentences. These policies target low income, minority communities. According to the Vera Institute, Black people are twice as likely to be arrested as white people.
+
+This data set is important because it reveals the inequality within the U.S. prison system. The data set shows the differences between men and women incarceration, different ethnicity incarceration, the growth of incarceration, where people are incarcerated the most, etc. The direct stakeholders in this research are the people who gathered the information because it is clear that they want to show inequality and make a difference. The indirect stakeholders are the people in prison who want change for the future as well as better rights. Other indirect stakeholders include politicians who have the power to make change, as well as people like me using the information to reveal inequalities.
+
+The questions I answer in my report are: What is the growth of the U.S. prison population look like from 1970-2018? How do different states compare in their prison population and growth of the prison population from 1970-2018? How do the prison populations of different ethnicities compare to each other? What states have the highest prison populations?
+
+## Data Summary 
+There are `r total_jail_blackpop` Black people in prison in the U.S.
+
+There are `r total_jail_aapipop` Asian American and Pacific Islander people in prison in the U.S.
+
+There are `r total_jail_latinxpop` Latinx people in prison in the U.S.
+
+There are `r total_jail_nativepop` Native people in prison in the U.S.
+
+There are `r total_jail_whitepop` white people in prison in the U.S.
+
+The inequality that I was the most interested in was the differences in how many people of an ethnicity were in prison. I decided to calculate the exact total prison population of each ethnicity from 1970-2018. I found that there are the most white people in prison, then Black people, then Latinx people, then Asian American and Pacific Islanders, then Native people. There is a big difference between the ethnicities which shows that there is inequality. 
+
+## Growth of U.S. Prison Population
+
+```{r, echo=FALSE, results = 'asis'}
+get_year_jail_pop <- function() {
+  total_jail_pop <- incarceration_trends %>%
+    pull(total_jail_pop)
+  
+  year_jail_pop <- incarceration_trends %>%
+    group_by(year) %>%
+    summarize(total_jail_pop = sum(year))
+  return()   
+}
+
+   us_growth_plot <- ggplot(data = incarceration_trends) +
+    geom_col(
+      mapping = aes(x = year, y = total_jail_pop)
+    ) +
+    labs(
+      title = "Growth of the U.S. Prison Population",
+      x = "Year",
+      y = "Total U.S. Jail Population",
+      caption = "This chart shows the total amount of people in U.S. prisons each year from 1970 to 2018")
+   print(us_growth_plot)
+```
+
+This chart answered the question of, what does the growth of the prison population between the years of 1970 and 2018 look like? The key patterns revealed in this chart are the prison population was fairly stagnant between 1970 to 1980 at around 175,000, and then in 1980 it began to increase dramatically until around 2009. Between 1980 and 2009, the prison population increased from about 175,000 to around 790,000. Between 2009 and 2018, the prison population fluctuated around 775,000. The most recent year, 2018, shows a prison population of around 760,000. Overall, this chart shows the drastic increase in the prison population in the past 48 years. 
+
+## Growth of Prison Population by State
+
+```{r echo = FALSE, results = 'asis'}
+  GA <- incarceration_trends %>%
+    group_by(state, year) %>%
+    filter(state == "GA") %>%
+    summarize(total_jail_pop = sum(year))
+  
+  TX <- incarceration_trends %>%
+    group_by(state, year) %>%
+    filter(state == "TX") %>%
+    summarize(total_jail_pop = sum(year))
+
+  FL <- incarceration_trends %>%
+    group_by(state, year) %>%
+    filter(state == "FL") %>%
+    summarize(total_jail_pop = sum(year))
+  
+  OH <- incarceration_trends %>%
+    group_by(state, year) %>%
+    filter(state == "OH") %>%
+    summarize(total_jail_pop = sum(year))
+
+  state_growth_plot <-
+    ggplot() +
+    geom_line(data = GA, mapping = aes(x = year, y = total_jail_pop), color = "blue") +
+    geom_line(data = TX, mapping = aes(x = year, y = total_jail_pop), color = "red") +
+    geom_line(data = FL, mapping = aes(x = year, y = total_jail_pop), color = "green") +
+    geom_line(data = OH, mapping = aes(x = year, y = total_jail_pop), color = "yellow") +
+    labs(
+      title = "Growth of the Prison Population by State",
+      x = "Year",
+      y = "Total State Jail Population",
+      caption = "This chart shows the growth of prison populations in Texas (red), Georgia (blue), Florida (green), and Ohio (yellow)
+      each year from 1970 to 2018")
+
+  print(state_growth_plot)
+```
+
+The question this chart answered is, how do different states’ prison population growth between 1970 and 2018 compare? I chose to compare the prison populations of Georgia, Texas, Florida, and Ohio. I chose these states because they are known to have some of the largest prison populations and are all in the top 10 states with the highest total populations. The key patterns I found in the chart are that Texas has a much higher prison population than the other three states and has had the most growth in the 48 years. Texas’ prison population was around 500,000 in 1970 and at 512,000 in 2018. The second highest was Georgia which grew from around 313,000 to 320,000. Ohio had the least growth, it went from 173,000 to 177,000. Finally, Florida went from 132,000 to 135,000. Florida also had the lowest prison population out of the states I studied. Overall, all of the states’ prison populations grew from 1970 to 2018. 
+
+## Distribution of US Prison Population by Ethnicity
+``` {r echo = FALSE, results = 'asis'}
+  ethnicity_jail_pop <- incarceration_trends %>%
+    select(AAPI, Black, White, Latinx, Native) %>%
+    gather(key = ethnicity, value = jail_population)
+
+    ethnicity_plot <-
+      ggplot(data = ethnicity_jail_pop) +
+      geom_col(
+        mapping = aes(x = ethnicity, y = jail_population),
+      ) +
+      labs(
+        title = "Prison Population by Ethnicity in U.S.",
+        x = "Ethnicity",
+        y = "Total U.S. Jail Population",
+        caption = "This chart shows the total amount of people in U.S. prisons from 1970 to 2018 by ethnicity")
+print(ethnicity_plot)
+```
+
+I chose to answer the question of how the prison populations of different ethnicities compare to each other. My chart reveals the drastic difference between how many white and Black people are in prison compared to AAPI and Native people. As mentioned before, Black people are twice as likely to be arrested than white people. A limitation of my chart is that it does not show the proportion of the prison population to the total population of an ethnicity, and it also shows the total amount of people by ethnicity in prison from 1970 to 2018, not just a single year. (I could not figure out how to fix these limitations). From my outside research, I can infer that there is a great inequality between the amount of Black people that are arrested. I found that Black people make up roughly 15% of the U.S. population, while White people make up about 62%. The data shows that there is a fairly similar amount of Black people and white people in prison over the past 48 years.
+
+## Distribution of US Prison Population by State
+``` {r echo = FALSE, results = 'asis'}
+  map_jail_pop <- incarceration_trends %>%
+    group_by(state) %>%
+    filter(year == 2018) %>%
+    select(state, total_jail_pop) %>%
+    summarise(across(c(total_jail_pop), sum, na.rm = TRUE))
+  
+blank_theme <- theme_bw() +    # for future use on map plot
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(), 
+    axis.ticks = element_blank(),     
+    axis.title = element_blank(),  
+    plot.background = element_blank(), 
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank()    
+  )
+
+  state_shape <- map_data("state") %>%
+    rename(state = region)
+  
+  state_names_and_codes <- state_names_and_codes %>%
+    rename(state = State)
+  
+  state_names_and_codes$state <- tolower(state_names_and_codes$state)
+  
+  map_jail_pop <- map_jail_pop %>%
+    rename(Code = state)
+  
+  map_jail_pop <- left_join(map_jail_pop, state_names_and_codes, by = "Code")
+  
+  state_shape <- state_shape %>%
+    left_join(map_jail_pop, by = "state")
+  
+  state_plot <-
+    ggplot(state_shape) +
+    geom_polygon(
+      mapping = aes(x = long, y = lat, group = group, fill = total_jail_pop),
+      color = "white",
+      size = .1
+    ) +
+    coord_map() +
+    scale_fill_continuous(low = "#132B43", high = "Red") +
+    labs(
+      fill = "State Jail Population",
+      title = "Map of US Prison Population") +
+    blank_theme
+print(state_plot)
+```
+
+I chose to answer the question of how prison populations vary by states and which states have the highest. I found that California and Texas have the highest prison populations. Followed by Florida, Georgia, and Pennsylvania. The states with the lowest are Wyoming, North Dakota, South Dakota, Maine, etc. While this also follows closely with total population, it is interesting to see that a lot of Southern and Eastern states have high prison populations compared to Northern and Western states. This could be because of stricter laws, party affiliation, etc.
