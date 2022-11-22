@@ -20,6 +20,8 @@ test_query2 <- function(num=6) {
 
 incarceration_trends <- read.csv("https://raw.githubusercontent.com/vera-institute/incarceration-trends/master/incarceration_trends.csv")
 
+state_names_and_codes <- read.csv("~/Documents/info201/assignments/a4-paigestanley1/source/state_names_and_codes.csv")
+
 ## Section 2  ---- 
 #----------------------------------------------------------------------------#
 # Your functions and variables might go here 
@@ -123,7 +125,7 @@ get_year_jail_pop <- function() {
 }
 
 plot_jail_pop_for_us <- function() {
- ggplot(data = incarceration_trends) +
+   us_growth_plot <- ggplot(data = incarceration_trends) +
     geom_col(
       mapping = aes(x = year, y = total_jail_pop)
     ) +
@@ -184,7 +186,8 @@ get_jail_pop_by_states <- function(states) {
 }
 
 plot_jail_pop_by_states <- function(states) {
-  ggplot() +
+  state_growth_plot <-
+    ggplot() +
     geom_line(data = GA, mapping = aes(x = year, y = total_jail_pop), color = "blue") +
     geom_line(data = TX, mapping = aes(x = year, y = total_jail_pop), color = "red") +
     geom_line(data = FL, mapping = aes(x = year, y = total_jail_pop), color = "green") +
@@ -229,7 +232,8 @@ return(ethnicity)
 }
 
 plot_ethnicity_jail_plot <- function(ethnicity) {
-    ggplot(data = ethnicity_jail_pop) +
+    ethnicity_plot <-
+      ggplot(data = ethnicity_jail_pop) +
       geom_col(
         mapping = aes(x = ethnicity, y = jail_population),
       ) +
@@ -287,7 +291,8 @@ plot_map_jail_pop <- function(map) {
   state_shape <- state_shape %>%
     left_join(map_jail_pop, by = "state")
   
-  ggplot(state_shape) +
+  state_plot <-
+    ggplot(state_shape) +
     geom_polygon(
       mapping = aes(x = long, y = lat, group = group, fill = total_jail_pop.y),
       color = "white",
